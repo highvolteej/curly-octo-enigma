@@ -11,7 +11,7 @@ steps:
             - path:
                 - "Dockerfile"
               config:
-                command: |
+                command: "echo core" 
                 label: ":whale: Build Core"
                 retry:
                   automatic:
@@ -20,12 +20,7 @@ steps:
             - path:
                 - "Dockerfile.util"
               config:
-                command: |
-                  #!/bin/bash
-                  echo --- Build Docker Image
-                  docker build -f Dockerfile.util -t "$QUAY_REPO/fiesta-util:$BUILDKITE_COMMIT" .
-                  echo --- Push Docker Image
-                  docker tag "$QUAY_REPO/fiesta-util:$BUILDKITE_COMMIT"
+                command: "echo util" 
                 label: ":whale: Build Util"
                 retry:
                   automatic:
