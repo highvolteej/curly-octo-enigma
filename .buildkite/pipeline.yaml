@@ -12,12 +12,7 @@ steps:
                 - "Dockerfile"
               config:
                 command: |
-                  #!/bin/bash
-                  echo --- Build Docker Image
-                  docker tag . -t "$QUAY_REPO/fiesta:$BUILDKITE_COMMIT
-                  echo --- Push Docker Image
-                  docker push "$QUAY_REPO/fiesta:$BUILDKITE_COMMIT
-                label: ":whale: Build Pritunl"
+                label: ":whale: Build Core"
                 retry:
                   automatic:
                   - limit: 2
@@ -31,7 +26,7 @@ steps:
                   docker build -f Dockerfile.util -t "$QUAY_REPO/fiesta-util:$BUILDKITE_COMMIT" .
                   echo --- Push Docker Image
                   docker tag "$QUAY_REPO/fiesta-util:$BUILDKITE_COMMIT"
-                label: ":whale: Build Pritunl Util"
+                label: ":whale: Build Util"
                 retry:
                   automatic:
                   - limit: 2
