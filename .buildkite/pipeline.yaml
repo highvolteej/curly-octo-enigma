@@ -1,0 +1,39 @@
+env:
+  # For publishing and using the docker image
+  QUAY_REPO: quay.io/tylerauerbeck
+
+
+steps:
+  - label: "Docker builds"
+    plugins:
+      - chronotc/monorepo-diff#v2.3.0:
+          watch:
+            - path:
+                - "Dockerfile"
+              config:
+                command: |
+                  #!/bin/bash
+                  echo --- Build Docker Image
+                  docker tag . -t "$QUAY_REPO/fiesta:$BUILDKITE_COMMIT
+                  echo --- Push Docker Image
+                  docker push "$QUAY_REPO/fiesta:$BUILDKITE_COMMIT
+                label: ":whale: Build Pritunl"
+                retry:
+                  automatic:
+                  - limit: 2
+                    exit_status: -1
+            - path:
+                - "Dockerfile.util"
+              config:
+                command: |
+                  #!/bin/bash
+                  echo --- Build Docker Image
+                  docker build -f Dockerfile.util -t "$QUAY_REPO/fiesta-util:$BUILDKITE_COMMIT" .
+                  echo --- Push Docker Image
+                  docker tag "$QUAY_REPO/fiesta-util:$BUILDKITE_COMMIT"
+                label: ":whale: Build Pritunl Util"
+                retry:
+                  automatic:
+                  - limit: 2
+                    exit_status: -1
+          wait: true
