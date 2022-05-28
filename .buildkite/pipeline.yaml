@@ -2,28 +2,19 @@ env:
   # For publishing and using the docker image
   QUAY_REPO: quay.io/tylerauerbeck
 
-
 steps:
-  - label: "Docker builds"
+  - label: ":partyparrot: Creating the pipeline"
     plugins:
-      - chronotc/monorepo-diff#v2.3.0:
-          watch:
-            - path:
+      - Zegocover/git-diff-conditional#v1.1.1:
+          dynamic_pipeline: ".buildkite/dyn-1.yaml"
+          steps:
+            - label: "core"
+              env:
+                thing: "core"
+              include:
                 - "Dockerfile"
-              config:
-                command: "echo core" 
-                label: ":whale: Build Core"
-                retry:
-                  automatic:
-                  - limit: 2
-                    exit_status: -1
-            - path:
+            - label: "util"
+              env:
+                thing: "util"
+              include:
                 - "Dockerfile.util"
-              config:
-                command: "echo util" 
-                label: ":whale: Build Util"
-                retry:
-                  automatic:
-                  - limit: 2
-                    exit_status: -1
-          wait: true
